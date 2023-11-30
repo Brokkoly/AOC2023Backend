@@ -1,5 +1,6 @@
 ﻿using AOC2023Backend.Days;
 using Microsoft.AspNetCore.Mvc;
+using System.Text;
 
 namespace AOC2023Backend.Controllers
 {
@@ -7,11 +8,13 @@ namespace AOC2023Backend.Controllers
     [Route("aoc")]
     public class AOCController : ControllerBase
     {
-        [Route("/DayOne")]
+        [Route("/Day/{dayNum}")]
         [HttpPost]
-        public IActionResult DayOne ([FromBody] string inputString)
+        public async Task<IActionResult> ResultForDay([FromRoute] string dayNum, [FromForm] string data)
         {
-            return new OkObjectResult((new DayOne()).PartOneAndTwo(inputString));
+            
+            var day = Day.DayFactory(int.Parse(dayNum));
+            return new OkObjectResult(day.PartOneAndTwo(data));
         }
     }
 }

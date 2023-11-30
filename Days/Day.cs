@@ -2,6 +2,18 @@
 {
     public abstract class Day
     {
+        public static Day DayFactory(int number)
+        {
+            switch(number)
+            {
+                case 1: return new DayOne();
+                //case 2: return new DayTwo();
+                //case 3: return new DayThree();
+                default:
+                    throw new Exception("That day isn't ready yet");
+            }
+        }
+
         public Answer PartOneAndTwo(string input)
         {
             return new Answer()
@@ -17,11 +29,11 @@
 
         public List<string> ParseInput(string input)
         {
-            return input.Split('\n').ToList();
+            return input.Split("\n").ToList();
         }
         public List<List<char>> ParseInput2D(string input)
         {
-            var lines = input.Split('\n').ToList();
+            var lines = input.Split("\n").ToList();
             return lines.Select(line =>
             {
                 return line.ToList();
