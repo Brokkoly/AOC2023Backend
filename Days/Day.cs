@@ -27,7 +27,7 @@
 
         public abstract string PartTwo(string input);
 
-        public List<string> ParseInput(string input)
+        public static List<string> ParseInput(string input)
         {
             var lines = input.Split("\n").ToList();
             if (lines[lines.Count - 1].Length == 0)
@@ -36,7 +36,7 @@
             }
             return lines;
         }
-        public List<List<char>> ParseInput2D(string input)
+        public static List<List<char>> ParseInput2D(string input)
         {
             var lines = ParseInput(input);
             return lines.Select(line =>

@@ -6,14 +6,15 @@ namespace AOC2023Backend.Days
     {
         public override string PartOne(string input)
         {
+            return WrapperForBoth(input, GetNumbersForLine);
+        }
+
+        private static string WrapperForBoth(string input, Func<string, int> numberGetter)
+        {
             var lines = ParseInput(input);
             var nums = lines.Select(line =>
             {
-                if (String.IsNullOrEmpty(line))
-                {
-                    return 0;
-                }
-                return GetNumbersForLine(line);
+                return numberGetter(line);
             });
             var total = 0;
             foreach (int num in nums)
@@ -23,14 +24,14 @@ namespace AOC2023Backend.Days
             return total.ToString();
         }
 
-        private int GetNumbersForLine(string input)
+        private static int GetNumbersForLine(string input)
         {
             char? front = null;
             char? back = null;
 
             for (int i = 0; i < input.Length; i++)
             {
-                if (Char.IsNumber(input[i]))
+                if (char.IsNumber(input[i]))
                 {
                     if (front == null)
                     {
@@ -49,24 +50,13 @@ namespace AOC2023Backend.Days
 
         public override string PartTwo(string input)
         {
-            var lines = ParseInput(input);
-            var nums = lines.Select(line =>
-            {
-                return GetNumbersOrStringsFromLine(line);
-            });
-            var total = 0;
-            foreach (int num in nums)
-            {
-                total += num;
-            }
-            return total.ToString();
+            return WrapperForBoth(input, GetNumbersOrStringsFromLine);
         }
-        private int GetNumbersOrStringsFromLine(string inputLine)
+        private static int GetNumbersOrStringsFromLine(string inputLine)
         {
-            char?[] numChars = { null, null };
             char? front = null;
             char? back = null;
-            List<string> validStarts = new List<string> { "zero", "0", "one", "1", "two", "2", "three", "3", "four", "4", "five", "5", "six", "6", "seven", "7", "eight", "8", "nine", "9", };
+            List<string> validStarts = new() { "one", "1", "two", "2", "three", "3", "four", "4", "five", "5", "six", "6", "seven", "7", "eight", "8", "nine", "9", };
             for (int i = 0; i < inputLine.Length; i++)
             {
                 var currentString = inputLine.Substring(i);
@@ -79,7 +69,6 @@ namespace AOC2023Backend.Days
                         {
                             front = newChar;
                         }
-                        //back = newChar;
                         break;
                     }
                 }
@@ -116,7 +105,7 @@ namespace AOC2023Backend.Days
             return int.Parse(new string(chars));
         }
 
-        private char GetCharFromString(string input)
+        private static char GetCharFromString(string input)
         {
             if (input.Length == 1)
             {
