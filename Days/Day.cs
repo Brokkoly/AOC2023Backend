@@ -4,7 +4,7 @@
     {
         public static Day DayFactory(int number)
         {
-            switch(number)
+            switch (number)
             {
                 case 1: return new DayOne();
                 //case 2: return new DayTwo();
@@ -29,11 +29,16 @@
 
         public List<string> ParseInput(string input)
         {
-            return input.Split("\n").ToList();
+            var lines = input.Split("\n").ToList();
+            if (lines[lines.Count - 1].Length == 0)
+            {
+                lines.RemoveAt(lines.Count - 1);
+            }
+            return lines;
         }
         public List<List<char>> ParseInput2D(string input)
         {
-            var lines = input.Split("\n").ToList();
+            var lines = ParseInput(input);
             return lines.Select(line =>
             {
                 return line.ToList();
