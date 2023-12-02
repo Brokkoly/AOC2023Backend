@@ -7,8 +7,8 @@
             switch (number)
             {
                 case 1: return new DayOne();
-                //case 2: return new DayTwo();
-                //case 3: return new DayThree();
+                case 2: return new DayTwo();
+                case 3: return new DayThree();
                 default:
                     throw new Exception("That day isn't ready yet");
             }
