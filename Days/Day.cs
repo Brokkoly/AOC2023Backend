@@ -9,18 +9,10 @@
                 case 1: return new DayOne();
                 case 2: return new DayTwo();
                 case 3: return new DayThree();
+                case 4: return new DayFour();
                 default:
                     throw new Exception("That day isn't ready yet");
             }
-        }
-
-        public Answer PartOneAndTwo(string input)
-        {
-            return new Answer()
-            {
-                PartOneAnswer = PartOne(input),
-                PartTwoAnswer = PartTwo(input)
-            };
         }
 
         public abstract string PartOne(string input);
@@ -46,9 +38,4 @@
         }
     }
 
-    public class Answer
-    {
-        public string PartOneAnswer { get; set; }
-        public string PartTwoAnswer { get; set; }
-    }
 }
