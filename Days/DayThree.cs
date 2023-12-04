@@ -62,22 +62,27 @@ namespace AOC2023Backend.Days
         private bool SymbolBehindNode(MatrixNode<char> node)
         {
             var directions = new List<Direction> { Direction.UpLeft, Direction.Left, Direction.DownLeft };
-            return CheckSymbolAnyDirection(node, directions);
+            return CheckSymbolAnyDirection(node, directions, CheckCharPartOne);
         }
 
         private bool SymbolAboveOrBelowNode(MatrixNode<char> node)
         {
             var directions = new List<Direction> { Direction.Up, Direction.Down };
-            return CheckSymbolAnyDirection(node, directions);
+            return CheckSymbolAnyDirection(node, directions, CheckCharPartOne);
         }
 
         private bool SymbolAheadOfNode(MatrixNode<char> node)
         {
             var directions = new List<Direction> { Direction.UpRight, Direction.Right, Direction.DownRight };
-            return CheckSymbolAnyDirection(node, directions);
+            return CheckSymbolAnyDirection(node, directions, CheckCharPartOne);
         }
 
-        private bool CheckSymbolAnyDirection(MatrixNode<char> node, List<Direction> directions)
+        private bool CheckCharPartOne(char toCheck)
+        {
+            return toCheck != '.' && !Char.IsDigit(toCheck);
+        }
+
+        private bool CheckSymbolAnyDirection(MatrixNode<char> node, List<Direction> directions, Func<char, bool> checkChar)
         {
             foreach (var direction in directions)
             {
