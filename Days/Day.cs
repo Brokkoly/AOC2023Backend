@@ -10,6 +10,7 @@
                 case 2: return new DayTwo();
                 case 3: return new DayThree();
                 case 4: return new DayFour();
+                case 5: return new DayFive();
                 default:
                     throw new Exception("That day isn't ready yet");
             }
