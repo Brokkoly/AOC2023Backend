@@ -11,6 +11,7 @@
                 case 3: return new DayThree();
                 case 4: return new DayFour();
                 case 5: return new DayFive();
+                case 6: return new DaySix();
                 default:
                     throw new Exception("That day isn't ready yet");
             }
@@ -37,6 +38,7 @@
                 return line.ToList();
             }).ToList();
         }
+
     }
 
 }
