@@ -34,9 +34,10 @@
             var lines = ParseInput(input);
             var race = Race.MakeRaceFromInputP2(lines[0], lines[1]);
 
-            var result = GetNumWays(race);
-
-            return result.ToString();
+            var sqrt = Math.Sqrt(Math.Pow(race.Time, 2) - 4 * race.Record);
+            var x1 = (race.Time + sqrt) / 2;
+            var x2 = (race.Time - sqrt) / 2;
+            return (x1-x2).ToString();
         }
     }
 
