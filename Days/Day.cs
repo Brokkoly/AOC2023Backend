@@ -12,6 +12,7 @@
                 case 4: return new DayFour();
                 case 5: return new DayFive();
                 case 6: return new DaySix();
+                case 7: return new DaySeven();
                 default:
                     throw new Exception("That day isn't ready yet");
             }

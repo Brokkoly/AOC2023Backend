@@ -184,6 +184,7 @@ namespace AOC2023Backend.Days
             var currentOutput4 = seedToLight.TranslateNum(82);
             var seedToTemperature = new GardenMapStep(GardenMap.GetIntersectionResult(seedToLight.Maps, lightToTemperatureMaps.Maps));
             var currentOutput5 = seedToTemperature.TranslateNum(82);
+            //seedToTemperature.Maps.RemoveAt(58);
             var seedToHumidity = new GardenMapStep(GardenMap.GetIntersectionResult(seedToTemperature.Maps, temperatureToHumidityMaps.Maps));
             var currentOutput6 = seedToHumidity.TranslateNum(82);
             var seedToLocation = new GardenMapStep(GardenMap.GetIntersectionResult(seedToHumidity.Maps, humidityToLocationMap.Maps));
@@ -262,12 +263,12 @@ namespace AOC2023Backend.Days
                 var inputRange = input[inputIndex];
                 if (nextRange.SourceRangeEnd < inputRange.DestRangeStart)
                 {
-                    //No overlap
+                    //No overlap (next too far left)
                     nextIndex++;
                 }
                 else if (nextRange.SourceRangeStart > inputRange.DestRangeEnd)
                 {
-                    //No overlap
+                    //No overlap (input too far left. do nothing to it)
                     inputIndex++;
                 }
                 else if (nextRange.SourceRangeStart <= inputRange.DestRangeStart && nextRange.SourceRangeEnd >= inputRange.DestRangeEnd)
@@ -283,14 +284,13 @@ namespace AOC2023Backend.Days
                         //next overlaps to the left
                         //inputIndex++ (point to the remaining input on the right
                         //nextIndex++
-                        var leftRange = nextRange.SourceRangeEnd - inputRange.DestRangeStart+1;
+                        var leftRange = nextRange.SourceRangeEnd - inputRange.DestRangeStart;
                         var rightRange = inputRange.RangeLength - leftRange;
                         var leftDestStart = inputRange.DestRangeStart;// + nextRange.SourceToDestOffset;
                         var rightDestStart = inputRange.DestRangeStart + leftRange;
                         var leftSourceStart = inputRange.SourceRangeStart;
                         var rightSourceStart = inputRange.SourceRangeStart + leftRange;
                         var LeftInput = new GardenMap(leftDestStart, leftSourceStart, leftRange);
-
                         var RightInputRemaining = new GardenMap(rightDestStart, rightSourceStart, rightRange);
                         input[inputIndex] = LeftInput;
                         input.Insert(inputIndex + 1, RightInputRemaining);
@@ -299,7 +299,6 @@ namespace AOC2023Backend.Days
                     }
                     else if (nextRange.SourceRangeEnd >= inputRange.DestRangeEnd)
                     {
-                        //(point to the remaining input on the right
                         //nothing changes for source on the left
                         //next overlaps to the right
                         var leftRange = nextRange.SourceRangeStart - inputRange.DestRangeStart;
@@ -314,14 +313,12 @@ namespace AOC2023Backend.Days
                         input.Insert(inputIndex + 1, RightInputRemaining);
                         inputIndex += 2;
                     }
-                    else
+                    else if (nextRange.SourceRangeStart >= inputRange.DestRangeStart && nextRange.SourceRangeEnd <= inputRange.DestRangeEnd)
                     {
                         //next in between
-                        //inputIndex+=2
-                        //nextIndex++
                         //nothing changes for input on the left
                         //input in the middle is affected
-                        //handle in next loop
+                        //handle input to the right in next iteration
 
                         var leftRange = nextRange.SourceRangeStart - inputRange.DestRangeStart;
                         var rightRange = inputRange.RangeLength - leftRange - nextRange.RangeLength;
@@ -333,9 +330,13 @@ namespace AOC2023Backend.Days
                         var MiddleInput = new GardenMap(nextRange.DestRangeStart, nextRange.SourceRangeStart, nextRange.RangeLength);
                         var RightInputRemaining = new GardenMap(rightDestStart, rightSourceStart, rightRange);
                         input[inputIndex] = LeftInput;
-                        input.Insert(inputIndex + 1, MiddleInput);
-                        input.Insert(inputIndex + 2, RightInputRemaining);
+                        input.InsertRange(inputIndex + 1, new List<GardenMap> { MiddleInput, RightInputRemaining });
                         inputIndex += 2;
+                        nextIndex++;
+                    }
+                    else
+                    {
+                        throw new Exception("You forgot a case");
                     }
                 }
             }
