@@ -43,6 +43,7 @@
                     Console.Write(GetNode(xIndex, yIndex).Value);
                 }
             }
+            Console.Write('\n');
         }
     }
     public class MatrixNode<T>

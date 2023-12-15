@@ -41,10 +41,14 @@
 
         public static List<string> ParseInput(string input)
         {
-            var lines = input.Split("\n").ToList();
+            List<string> lines = input.Split("\n").ToList();
             if (lines[lines.Count - 1].Length == 0)
             {
                 lines.RemoveAt(lines.Count - 1);
+            }
+            if (lines == null)
+            {
+                throw new Exception();
             }
             return lines;
         }
@@ -56,7 +60,27 @@
                 return line.ToList();
             }).ToList();
         }
-
+        public static InputRowsAndColumns ParseInputRowsAndColumns(string input)
+        {
+            return new InputRowsAndColumns(input);
+        }
     }
+    public class InputRowsAndColumns
+    {
+        public List<List<char>> Rows { get; set; }
+        public List<List<char>> Columns { get; set; } = new();
 
+        public InputRowsAndColumns(string input)
+        {
+            Rows = Day.ParseInput2D(input);
+            for (int xIndex = 0; xIndex < Rows[0].Count; xIndex++)
+            {
+                Columns.Add(new());
+                for (int yIndex = 0; yIndex < Rows.Count; yIndex++)
+                {
+                    Columns[xIndex].Add(Rows[yIndex][xIndex]);
+                }
+            }
+        }
+    }
 }
