@@ -24,6 +24,15 @@
                 }
                 Values.Add(currentRow);
             }
+            foreach (var row in Values)
+            {
+                foreach (var node in row)
+                {
+                    var dirs = new List<Direction> { Direction.Up, Direction.Down, Direction.Left, Direction.Right };
+                    var adjacents = dirs.Select(x => node.GetFromDirection(x)).Where(x => x != null).ToList();
+                    node.Adjacencies.AddRange(adjacents);
+                }
+            }
         }
         public MatrixNode<T>? GetNode(int xIndex, int yIndex)
         {
@@ -33,6 +42,18 @@
             }
             return Values[yIndex][xIndex];
         }
+
+        public List<MatrixNode<T>> FlatNodes()
+        {
+            var retList = new List<MatrixNode<T>>();
+
+            foreach (var row in Values)
+            {
+                retList.AddRange(row);
+            }
+
+            return retList;
+        }
         public void PrintMatrix()
         {
             for (var yIndex = 0; yIndex < Values.Count; yIndex++)
@@ -40,7 +61,7 @@
                 Console.Write('\n');
                 for (var xIndex = 0; xIndex < Values[yIndex].Count; xIndex++)
                 {
-                    Console.Write(GetNode(xIndex, yIndex).Value);
+                    Console.Write(GetNode(xIndex, yIndex).Value.ToString());
                 }
             }
             Console.Write('\n');
@@ -48,6 +69,11 @@
     }
     public class MatrixNode<T>
     {
+        public override string ToString()
+        {
+            return Value.ToString();
+        }
+        public List<MatrixNode<T>> Adjacencies { get; set; } = new();
         public int XIndex { get; set; }
         public int YIndex { get; set; }
         public T Value { get; set; }
@@ -108,5 +134,9 @@
 
             return Parent.GetNode(newX, newY);
         }
+
+        public void RemoveAdjacentNode(MatrixNode<T> node) { Adjacencies.Remove(node); }
+
+        public void AddAdjacentNode(MatrixNode<T> node) { Adjacencies.Add(node); }
     }
 }

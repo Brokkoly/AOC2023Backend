@@ -1,7 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using System.Runtime.InteropServices;
-
-namespace AOC2023Backend.Days
+﻿namespace AOC2023Backend.Days
 {
     public class DayEight : Day
     {
@@ -25,7 +22,7 @@ namespace AOC2023Backend.Days
             var primes = FindAllPrimes(loopNums[0]);
             var primeFactors = loopNums.Select(x => FindPrimeFactors(x, ref primes)).ToList();
             long multNum = primeFactors[0][1];
-            foreach(var factor in primeFactors)
+            foreach (var factor in primeFactors)
             {
                 multNum *= factor[0];
             }
@@ -63,7 +60,7 @@ namespace AOC2023Backend.Days
                 do
                 {
                     retPrimes.Add(2);
-                    numToUse = input / 2;
+                    numToUse = numToUse / 2;
                 } while (numToUse % 2 == 0);
             }
 

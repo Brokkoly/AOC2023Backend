@@ -147,6 +147,74 @@ namespace AOC2023Backend.Days
             return retNodes;
         }
 
+        public List<(MatrixNode<DjikstraValue>, Direction)> GetNextNodes2(MatrixNode<DjikstraValue> node, Direction inputDir, int stepsRemaining)
+        {
+            var retNodes = new List<(MatrixNode<DjikstraValue>, Direction)>();
+            node.Value.VisitedFromDir[inputDir] = true;
+            var directionDict = new Dictionary<Direction, List<MatrixNode<DjikstraValue>>>();
+            foreach (var dir in new List<Direction> { Direction.Up, Direction.Right, Direction.Down, Direction.Left })
+            {
+                if (dir == inputDir) continue;
+                else if (dir == Direction.Up && inputDir == Direction.Down) continue;
+                else if (dir == Direction.Down && inputDir == Direction.Up) continue;
+                else if (dir == Direction.Left && inputDir == Direction.Right) continue;
+                else if (dir == Direction.Right && inputDir == Direction.Left) continue;
+                directionDict[dir] = new();
+                var node1 = node.GetFromDirection(dir);
+                if (node1 == null)
+                {
+                    continue;
+                }
+                var cost = node.Value.GetDistanceFromStartFromDirection(inputDir);
+                if (cost == int.MaxValue)
+                {
+                    throw new Exception();
+                }
+                cost += node1.Value.Weight;
+                node1.Value.SetDistanceFromStartFromDirection(dir, Math.Min(cost, node1.Value.GetDistanceFromStartFromDirection(dir)));
+                if (!node1.Value.VisitedFromDir[dir])
+                {
+                    directionDict[dir].Add(node1);
+                }
+                var node2 = node1.GetFromDirection(dir);
+                if (node2 == null)
+                {
+                    continue;
+                }
+                else
+                {
+                    cost += node2.Value.Weight;
+                    node2.Value.SetDistanceFromStartFromDirection(dir, Math.Min(cost, node2.Value.GetDistanceFromStartFromDirection(dir)));
+                    if (!node2.Value.VisitedFromDir[dir])
+                    {
+                        directionDict[dir].Add(node2);
+                    }
+                }
+                var node3 = node2.GetFromDirection(dir);
+                if (node3 == null)
+                {
+                    continue;
+                }
+                else
+                {
+                    cost += node3.Value.Weight;
+                    node3.Value.SetDistanceFromStartFromDirection(dir, Math.Min(cost, node3.Value.GetDistanceFromStartFromDirection(dir)));
+                    if (!node3.Value.VisitedFromDir[dir])
+                    {
+                        directionDict[dir].Add(node3);
+                    }
+                }
+            }
+            foreach (var keyValuePair in directionDict)
+            {
+                keyValuePair.Value.ForEach(x =>
+                {
+                    retNodes.Add((x, keyValuePair.Key));
+                });
+            }
+            return retNodes;
+        }
+
         public int FindShortest()
         {
             var firstNode = Values.First().First();
@@ -168,18 +236,18 @@ namespace AOC2023Backend.Days
                 var newPossibles = GetNextNodes(nextNode.Item1, nextNode.Item2);
                 foreach (var possibility in newPossibles)
                 {
-                    if (possibility.Item1.Value.GetDistanceFromStartFromDirection(possibility.Item2) < MaxCost)
-                    {
-                        possibleNodes.Enqueue(possibility, possibility.Item1.Value.GetDistanceFromStartFromDirection(possibility.Item2));
-                    }
-                    else
-                    {
+                    //if (possibility.Item1.Value.GetDistanceFromStartFromDirection(possibility.Item2) < MaxCost)
+                    //{
+                    possibleNodes.Enqueue(possibility, possibility.Item1.Value.GetDistanceFromStartFromDirection(possibility.Item2) + endNode.YIndex - possibility.Item1.YIndex + endNode.XIndex - possibility.Item1.YIndex);
+                    //}
+                    //else
+                    //{
 
-                    }
+                    //}
                 }
             }
 
-            return nextNode.Item1.Value.GetDistanceFromStartFromDirection(nextNode.Item2);
+            return nextNode.Item1.Value.GetDistanceFromStartFromDirection(nextNode.Item2) - firstNode.Value.Weight;
         }
         public void Initialize()
         {
@@ -224,9 +292,18 @@ namespace AOC2023Backend.Days
             //    }
             //});
         }
+
         public DjikstraMatrix(List<List<DjikstraValue>> input, bool reverseYAxis = false) : base(input, reverseYAxis)
         {
-            MaxCost = (input[0].Count + input.Count) * 10;
+            MaxCost = 0;
+            for (int i = 0; i < input.Count; i++)
+            {
+                MaxCost += input[i][0].Weight;
+            }
+            for (int i = 0; i < input[0].Count; i++)
+            {
+                MaxCost += input[input.Count - 1][i].Weight;
+            }
         }
 
 
